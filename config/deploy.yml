@@ -1,17 +1,20 @@
+<% require "dotenv"; Dotenv.load(".env") %>
+
 service: demo-go-echo
 image: gambala/demo-go-echo
 servers:
   - <%= ENV["MAIN_SERVER_IP"] %>
-labels:
-  traefik.http.routers.demo-go-echo-web.rule: Host(`echo.gambala.pro`)
+proxy:
+  ssl: false
+  host: echo.gambala.pro
+  app_port: 1323
+  healthcheck:
+    interval: 10
+    path: /
 registry:
   server: ghcr.io
   username: gambala
   password:
     - KAMAL_REGISTRY_PASSWORD
-healthcheck:
-  interval: 10s
-  path: /
-  port: 1323
 builder:
-  multiarch: false
+  arch: arm64
